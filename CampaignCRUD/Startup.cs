@@ -1,6 +1,7 @@
 using AutoMapper;
 using CampaignCRUD.Data;
 using CampaignCRUD.IServices;
+using CampaignCRUD.Maps;
 using CampaignCRUD.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,7 @@ namespace CampaignCRUD
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                
+                mc.AddProfile(new CampaignProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

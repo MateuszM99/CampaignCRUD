@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace CampaignCRUD.Controllers
 {
     [Route("api/[controller]")]
@@ -28,16 +29,15 @@ namespace CampaignCRUD.Controllers
         }
         public async Task<IActionResult> CreateCampaign([FromBody] CampaignDTO campaignModel)
         {
-            try
+            
+            var response = await _campaignServices.createCampaign(campaignModel);
+
+            if (!response.Success)
             {
-                await _campaignServices.createCampaign(campaignModel);
-                return Ok();
+                return BadRequest(response);
             }
-            catch(Exception ex)
-            {
-                throw;
-            }
-           
+
+            return Ok(response);                   
         }
         public async Task<IActionResult> UpdateCampaign()
         {
