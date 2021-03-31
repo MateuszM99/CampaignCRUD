@@ -1,4 +1,7 @@
+using AutoMapper;
 using CampaignCRUD.Data;
+using CampaignCRUD.IServices;
+using CampaignCRUD.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +29,16 @@ namespace CampaignCRUD
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddControllersWithViews();
+
+            services.AddScoped<ICampaignServices, CampaignServices>();
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
