@@ -10,9 +10,9 @@ namespace CampaignCRUD.IServices
 {
     public interface ICampaignServices
     {
-        public Task<List<CampaignDTO>> getCampaigns();
-        public Task<ServiceResponse<List<CampaignDTO>>> createCampaign(CampaignDTO campaignModel);
-        public Task<ServiceResponse<List<CampaignDTO>>> updateCampaign(CampaignDTO campaignModel);
-        public Task<ServiceResponse<List<CampaignDTO>>> deleteCampaign(int id);
+        public Task<ServiceResponse<List<CampaignDTO>>> getCampaignsAsync();
+        public Task<ServiceResponse<List<CampaignDTO>>> createCampaignAsync(CampaignDTO campaignModel);
+        public Task<ServiceResponse<List<CampaignDTO>>> updateCampaignAsync(CampaignDTO campaignModel);
+        public Task<ServiceResponse<List<CampaignDTO>>> deleteCampaignAsync(int id);
     }
 }

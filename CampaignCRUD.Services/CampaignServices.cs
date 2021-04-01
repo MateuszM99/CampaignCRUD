@@ -24,7 +24,29 @@ namespace CampaignCRUD.Services
             _appDb = appDb;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<CampaignDTO>>> createCampaign(CampaignDTO campaignModel)
+
+        public async Task<ServiceResponse<List<CampaignDTO>>> getCampaignsAsync()
+        {
+            try
+            {
+                var campaigns = await _appDb.Campaigns.ToListAsync();
+                var campaignsDTO = _mapper.Map<List<CampaignDTO>>(campaigns);
+                
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Data = campaignsDTO;
+                serviceResponse.Message = "Successfully fetched all Campaigns";
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+                return serviceResponse;
+            }
+        }
+
+        public async Task<ServiceResponse<List<CampaignDTO>>> createCampaignAsync(CampaignDTO campaignModel)
         {
             if (campaignModel == null)
             {
@@ -37,7 +59,8 @@ namespace CampaignCRUD.Services
             try
             {
                 var campaign = _mapper.Map<Campaign>(campaignModel);
-                await _appDb.AddAsync(campaign);
+                await _appDb.Campaigns.AddAsync(campaign);
+                await _appDb.SaveChangesAsync();
                 var campaigns = await _appDb.Campaigns.ToListAsync();
                 var campaignsDTO = _mapper.Map<List<CampaignDTO>>(campaigns);
 
@@ -55,19 +78,58 @@ namespace CampaignCRUD.Services
             }
         }
 
-        public async Task<ServiceResponse<List<CampaignDTO>>> deleteCampaign(int id)
+        public async Task<ServiceResponse<List<CampaignDTO>>> deleteCampaignAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var campaign = await _appDb.Campaigns.FindAsync(id);
+                _appDb.Campaigns.Remove(campaign);
+                await _appDb.SaveChangesAsync();
+                var campaigns = await _appDb.Campaigns.ToListAsync();
+                var campaignsDTO = _mapper.Map<List<CampaignDTO>>(campaigns);
+
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Data = campaignsDTO;
+                serviceResponse.Message = "Successfully removed Campaign";
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+                return serviceResponse;
+            }
         }
 
-        public Task<List<CampaignDTO>> getCampaigns()
+        public async Task<ServiceResponse<List<CampaignDTO>>> updateCampaignAsync(CampaignDTO updatedCampaignModel)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var campaign = await _appDb.Campaigns.FindAsync(updatedCampaignModel.Id);
+                campaign.Name = updatedCampaignModel.Name;
+                campaign.Keywords = updatedCampaignModel.Keywords;
+                campaign.BidAmount = updatedCampaignModel.BidAmount;
+                campaign.CampaignFund = updatedCampaignModel.CampaignFund;
+                campaign.Status = updatedCampaignModel.Status;
+                campaign.Town = updatedCampaignModel.Town;
+                campaign.Radius = updatedCampaignModel.Radius;
+                await _appDb.SaveChangesAsync();
+                var campaigns = await _appDb.Campaigns.ToListAsync();
+                var campaignsDTO = _mapper.Map<List<CampaignDTO>>(campaigns);
 
-        public Task<ServiceResponse<List<CampaignDTO>>> updateCampaign(CampaignDTO campaignModel)
-        {
-            throw new NotImplementedException();
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Data = campaignsDTO;
+                serviceResponse.Message = "Successfully updated Campaign";
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse<List<CampaignDTO>> serviceResponse = new ServiceResponse<List<CampaignDTO>>();
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+                return serviceResponse;
+            }
         }
     }
 }

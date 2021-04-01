@@ -17,35 +17,66 @@ namespace CampaignCRUD.Controllers
     {
         private readonly CampaignContext _appDb;
         private readonly ICampaignServices _campaignServices;
-        public CampaignsController(CampaignContext appDb,ICampaignServices  campaignServices)
+        public CampaignsController(CampaignContext appDb, ICampaignServices campaignServices)
         {
             _appDb = appDb;
             _campaignServices = campaignServices;
         }
 
+        [HttpGet]
+        [Route("getCampaigns")]
         public async Task<IActionResult> GetCampaigns()
         {
-            return Ok();
-        }
-        public async Task<IActionResult> CreateCampaign([FromBody] CampaignDTO campaignModel)
-        {
-            
-            var response = await _campaignServices.createCampaign(campaignModel);
+            var response = await _campaignServices.getCampaignsAsync();
 
             if (!response.Success)
             {
                 return BadRequest(response);
             }
 
-            return Ok(response);                   
+            return Ok(response);
         }
-        public async Task<IActionResult> UpdateCampaign()
+
+        [HttpPost]
+        [Route("createCampaign")]
+        public async Task<IActionResult> CreateCampaign([FromBody] CampaignDTO campaignModel)
         {
-            return Ok();
+            var response = await _campaignServices.createCampaignAsync(campaignModel);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
-        public async Task<IActionResult> DeleteCampaign()
+
+        [HttpPut]
+        [Route("updateCampaign")]
+        public async Task<IActionResult> UpdateCampaign([FromBody] CampaignDTO updatedCampaignModel)
         {
-            return Ok();
+            var response = await _campaignServices.updateCampaignAsync(updatedCampaignModel);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("deleteCampaign")]
+        public async Task<IActionResult> DeleteCampaign(int id)
+        {
+            var response = await _campaignServices.deleteCampaignAsync(id);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
     }
 }
