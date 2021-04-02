@@ -1,9 +1,10 @@
-import React,{ useState } from 'react'
+import React,{ useState,useEffect } from 'react'
 import CampaignTR from '../CampaignTR/CampaignTR'
 import CreateCampaign from '../CreateCampaign/CreateCampaign'
 import DeleteCampaign from '../DeleteCampaign/DeleteCampaign';
 import UpdateCampaign from '../UpdateCampaign/UpdateCampaign';
 import './style.scss'
+import {getCampaigns,deleteCampaign} from '../../api/CampaignRequests'
 
 function CampaignMain() {
 
@@ -11,7 +12,30 @@ function CampaignMain() {
     const [isUpdateDisplayed, setIsUpdateDisplayed] = useState(false);
     const [isDeleteDisplayed, setIsDeleteDisplayed] = useState(false);
     const [updatedCampaignId, setUpdatedCampaignId] = useState(null);
+    const [campaigns,setCampaigns] = useState(null);
 
+    useEffect(() => {
+        if(campaigns == null) {
+            getCampaignsCall();
+        }
+    }, [campaigns])
+
+    const getCampaignsCall = async () => {
+        try {
+            let response = await getCampaigns();
+            setCampaigns(response.data)
+        } catch (err) {
+            // TODO if error
+        }
+    }
+
+    const deleteCampaignCall = async (campaignId) => {
+        try {
+            let response = await deleteCampaign(campaignId);
+        } catch (err) {
+            // TODO if error
+        }
+    }
 
     return (
     <div className="container-xl">
@@ -23,7 +47,7 @@ function CampaignMain() {
                             <h2>Manage <b>Campaigns</b></h2>
                         </div>
                         <div className="col-sm-6">
-                            <a className="btn btn-success" onClick={() => setIsCreateDisplayed(true)}><span>Add New Employee</span></a>                           						
+                            <a className="btn btn-success" onClick={() => setIsCreateDisplayed(true)}><span>Add New Campaign</span></a>                           						
                         </div>
                     </div>
                 </div>
