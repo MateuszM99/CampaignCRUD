@@ -43,10 +43,8 @@ function CreateCampaign(props) {
                 })}
 
                 onSubmit={(values, { setSubmitting, setStatus, resetForm }) => {
-                    createCampaign(values)
-                    .then(r => 
-                        setStatus({ message: r.data.message }),
-                        )
+                    props.createCampaign(values)
+                    props.closeTrigger(false)
                 }}
                 >
                     {({ errors, touched,isSubmitting,status,setFieldValue,setFieldTouched}) => (

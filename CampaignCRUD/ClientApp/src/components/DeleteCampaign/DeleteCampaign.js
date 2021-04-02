@@ -14,8 +14,8 @@ function DeleteCampaign(props) {
                     <p className="text-warning"><small>This action cannot be undone.</small></p>
                 </div>
                 <div className="modal-footer">
-                    <input type="button" className="btn btn-default" value="Cancel"/>
-                    <input type="submit" className="btn btn-danger" value="Delete"/>
+                    <input type="button" className="btn btn-default" value="Cancel" onClick={() => props.closeTrigger(false)}/>
+                    <input type="submit" className="btn btn-danger" value="Delete" onClick={() => {props.deleteCampaign(props.id); props.closeTrigger(false);}}/>
                 </div>
             </div>
         </div>

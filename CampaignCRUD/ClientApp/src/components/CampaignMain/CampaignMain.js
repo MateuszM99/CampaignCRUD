@@ -4,14 +4,14 @@ import CreateCampaign from '../CreateCampaign/CreateCampaign'
 import DeleteCampaign from '../DeleteCampaign/DeleteCampaign';
 import UpdateCampaign from '../UpdateCampaign/UpdateCampaign';
 import './style.scss'
-import {getCampaigns,deleteCampaign} from '../../api/CampaignRequests'
+import {getCampaigns,deleteCampaign,createCampaign,editCampaign} from '../../api/CampaignRequests'
 
 function CampaignMain() {
 
     const [isCreateDisplayed, setIsCreateDisplayed] = useState(false);
     const [isUpdateDisplayed, setIsUpdateDisplayed] = useState(false);
     const [isDeleteDisplayed, setIsDeleteDisplayed] = useState(false);
-    const [updatedCampaignId, setUpdatedCampaignId] = useState(null);
+    const [currentCampaignId, setCurrentCampaignId] = useState(null);
     const [campaigns,setCampaigns] = useState(null);
 
     useEffect(() => {
@@ -32,8 +32,27 @@ function CampaignMain() {
     const deleteCampaignCall = async (campaignId) => {
         try {
             let response = await deleteCampaign(campaignId);
+            setCampaigns(response.data)
         } catch (err) {
             // TODO if error
+        }
+    }
+
+    const createCampaignCall = async (campaignModel) => {
+        try{
+            let response = await createCampaign(campaignModel);
+            setCampaigns(response.data);
+        } catch(err) {
+
+        }
+    }
+
+    const editCampaignCall = async (campaignModel) => {
+        try {
+            let response = await editCampaign(campaignModel);
+            setCampaigns(response.data);
+        } catch (err) {
+
         }
     }
 
@@ -65,16 +84,19 @@ function CampaignMain() {
                         </tr>
                     </thead>
                     <tbody>
-                        <CampaignTR isUpdateDisplayedTrigger={setIsUpdateDisplayed} isDeleteDisplayedTrigger={setIsDeleteDisplayed} idSetter={setUpdatedCampaignId}/>
-                        <CampaignTR/>
-                        <CampaignTR/>
+                        {campaigns != null ?
+                        campaigns.map(campaign =>
+                            <CampaignTR isUpdateDisplayedTrigger={setIsUpdateDisplayed} isDeleteDisplayedTrigger={setIsUpdateDisplayed} idSetter={setCurrentCampaignId} id={campaign.id} name={campaign.name} keywords={campaign.keywords} bidAmount={campaign.bidAmount} campaignFund={campaign.campaignFund} status={campaign.status} town={campaign.town} radius={campaign.radius}/>
+                            )
+                            : null
+                        }
                     </tbody>
                 </table>
             </div>
         </div>  
-        <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed}/>  
-        <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed}/>
-        <DeleteCampaign isShown={isDeleteDisplayed} closeTrigger={setIsDeleteDisplayed}/>
+        <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed} createCampaign = {createCampaignCall}/>  
+        <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed} updateCampaign = {editCampaignCall} id={currentCampaignId}/>
+        <DeleteCampaign isShown={isDeleteDisplayed} closeTrigger={setIsDeleteDisplayed} deleteCampaign = {deleteCampaignCall} id={currentCampaignId}/>
     </div>
     )
 }

@@ -13,8 +13,8 @@ function CampaignTR(props) {
             <td>{props.town}</td>
             <td>{props.radius}</td>
             <td>
-                <EditIcon style={{marginRight : '3px',color : 'rgb(196, 172, 36)'}} onClick={() => {props.isUpdateDisplayedTrigger(true); props.idSetter("random");}}/>
-                <DeleteIcon color="secondary" onClick={() => {props.isDeleteDisplayedTrigger(true); props.idSetter("random");}}/>
+                <EditIcon style={{marginRight : '3px',color : 'rgb(196, 172, 36)'}} onClick={() => {props.isUpdateDisplayedTrigger(true); props.idSetter(props.id);}}/>
+                <DeleteIcon color="secondary" onClick={() => {props.isDeleteDisplayedTrigger(true); props.idSetter(props.id);}}/>
             </td>
         </tr>
     )
