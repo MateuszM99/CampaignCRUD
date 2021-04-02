@@ -1,30 +1,35 @@
-import React from 'react'
+import React,{ useState } from 'react'
+import CampaignTR from '../CampaignTR/CampaignTR'
+import CreateCampaign from '../CreateCampaign/CreateCampaign'
+import DeleteCampaign from '../DeleteCampaign/DeleteCampaign';
+import UpdateCampaign from '../UpdateCampaign/UpdateCampaign';
 import './style.scss'
 
 function CampaignMain() {
+
+    const [isCreateDisplayed, setIsCreateDisplayed] = useState(false);
+    const [isUpdateDisplayed, setIsUpdateDisplayed] = useState(false);
+    const [isDeleteDisplayed, setIsDeleteDisplayed] = useState(false);
+    const [updatedCampaignId, setUpdatedCampaignId] = useState(null);
+
+
     return (
-    <div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-6">
+    <div className="container-xl">
+        <div className="table-responsive">
+            <div className="table-wrapper">
+                <div className="table-title">
+                    <div className="row">
+                        <div className="col-sm-6">
                             <h2>Manage <b>Campaigns</b></h2>
                         </div>
-                        <div class="col-sm-6">
-                            <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>                           						
+                        <div className="col-sm-6">
+                            <a className="btn btn-success" onClick={() => setIsCreateDisplayed(true)}><span>Add New Employee</span></a>                           						
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped table-hover">
+                <table className="table table-striped table-hover">
                     <thead>
-                        <tr>
-                            <th>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="selectAll" />
-                                    <label for="selectAll"></label>
-                                </span>
-                            </th>
+                        <tr>                           
                             <th>Name</th>
                             <th>Keywords</th>
                             <th>Bid amount</th>
@@ -36,11 +41,16 @@ function CampaignMain() {
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        <CampaignTR isUpdateDisplayedTrigger={setIsUpdateDisplayed} isDeleteDisplayedTrigger={setIsDeleteDisplayed} idSetter={setUpdatedCampaignId}/>
+                        <CampaignTR/>
+                        <CampaignTR/>
                     </tbody>
                 </table>
             </div>
-        </div>        
+        </div>  
+        <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed}/>  
+        <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed}/>
+        <DeleteCampaign isShown={isDeleteDisplayed} closeTrigger={setIsDeleteDisplayed}/>
     </div>
     )
 }
