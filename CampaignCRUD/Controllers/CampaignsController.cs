@@ -27,11 +27,6 @@ namespace CampaignCRUD.Controllers
         [Route("getCampaign")]
         public async Task<IActionResult> GetCampaign(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model is not valid");
-            }
-
             var response = await _campaignServices.getCampaignAsync(id);
 
             if (!response.Success)
@@ -69,7 +64,7 @@ namespace CampaignCRUD.Controllers
 
             if (!response.Success)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,response);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
 
             return Ok(response);
@@ -98,11 +93,6 @@ namespace CampaignCRUD.Controllers
         [Route("deleteCampaign")]
         public async Task<IActionResult> DeleteCampaign(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model is not valid");
-            }
-
             var response = await _campaignServices.deleteCampaignAsync(id);
 
             if (!response.Success)

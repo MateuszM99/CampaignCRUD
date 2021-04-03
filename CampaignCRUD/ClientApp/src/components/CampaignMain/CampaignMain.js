@@ -5,6 +5,7 @@ import DeleteCampaign from '../DeleteCampaign/DeleteCampaign';
 import UpdateCampaign from '../UpdateCampaign/UpdateCampaign';
 import './style.scss'
 import {getCampaigns,deleteCampaign,createCampaign,editCampaign} from '../../api/CampaignRequests'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 function CampaignMain(props) {
 
@@ -27,6 +28,7 @@ function CampaignMain(props) {
             setCampaigns(response.data.data);
         } catch (err) {
             // TODO if error
+            // Some notification system or can return string
         }
     }
 
@@ -36,6 +38,7 @@ function CampaignMain(props) {
             setCampaigns(response.data.data)
         } catch (err) {
             // TODO if error
+            // Some notification system or can return string
         }
     }
 
@@ -45,7 +48,8 @@ function CampaignMain(props) {
             setCampaigns(response.data.data);
             return true;
         } catch (err) {
-            console.log('Here')
+            // TODO if error
+            // Some notification system or can return string
             return false;
         }
     }
@@ -61,7 +65,7 @@ function CampaignMain(props) {
     }
 
     return (
-    <div className="container-xl">
+    <div className="container-fluid">
         <div className="table-responsive">
             <div className="table-wrapper">
                 <div className="table-title">
@@ -70,7 +74,7 @@ function CampaignMain(props) {
                             <h2>Manage <b>Campaigns</b></h2>
                         </div>
                         <div className="col-sm-6">
-                            <a className="btn btn-success" onClick={() => setIsCreateDisplayed(true)}><span>Add New Campaign</span></a>                           						
+                            <a className="btn btn-success" onClick={() => setIsCreateDisplayed(true)}><span><AddCircleOutlineIcon style={{marginRight : '5px',color: 'white'}}/>Add New Campaign</span></a>                           						
                         </div>
                     </div>
                 </div>

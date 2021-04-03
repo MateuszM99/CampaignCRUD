@@ -6,7 +6,16 @@ import {getCampaign} from '../../api/CampaignRequests'
 
 function UpdateCampaign(props) {
 
-    const users = [];
+    const keywordsArray = [
+        'market',
+        'cooking',
+        'music',
+        'politics',
+        'buisness',
+        'life',
+        'animals',
+      ];
+
     const [campaign,setCampaign] = useState(null);
 
     useEffect(() => {
@@ -22,16 +31,17 @@ function UpdateCampaign(props) {
             setCampaign(response.data.data);
         } catch (err) {
             // TODO if error
+            // Some notification system or can return string
         }
     }
 
     if(campaign == null){
         return (
-            <div style={{display : props.isShown ? 'block' : 'none'}}>Error</div>
+            <div style={{display : props.isShown ? 'block' : 'none',visibility : props.isShown ? 'visible' : 'hidden'}} className="pop-up-container">Error</div>
         )
     }
     return (
-        <div style={{display : props.isShown ? 'block' : 'none'}}>
+        <div style={{display : props.isShown ? 'block' : 'none'}} className="pop-up-container">
         <div className="modal-dialog">
             <div className="modal-content">
                 <Formik
@@ -54,7 +64,6 @@ function UpdateCampaign(props) {
                             .required('Keyword is mandatory')
                             .of(
                                 Yup.string()
-                                .trim()
                                 .required('Keyword cannot be empty')),
                     bidAmount : Yup.number()
                                 .positive('The amount must me positive')
@@ -76,6 +85,7 @@ function UpdateCampaign(props) {
                         if(response){
                             props.accountBalanceSet(props.accountBalance - (values.campaignFund - campaign.campaignFund ))
                             resetForm(true);
+                            setCampaign(null);
                             props.closeTrigger(false)
                         } else {
                             setStatus({message : "Something went wrong"})                           
@@ -113,12 +123,12 @@ function UpdateCampaign(props) {
                                                             id={index}
                                                             multiple={false}
                                                             onChange={(selected) => {                                                               
-                                                                setFieldValue(`keywords[${index}]`, selected);
+                                                                setFieldValue(`keywords[${index}]`, selected.toString());
                                                             }}
                                                             onInputChange={(text,event) => setFieldValue(`keywords[${index}]`, text)}
                                                             onBlur={(e) => setFieldTouched(`keywords[${index}]`, true)}
                                                             labelKey="fullname"
-                                                            options={users} 
+                                                            options={keywordsArray} 
                                                             placeholder={keywords[index]}                                                     
                                                             />                                                       
                                                             {
@@ -178,9 +188,9 @@ function UpdateCampaign(props) {
                             </div>			
                         </div>
                         <div className="modal-footer" style={{display : 'flex',flexDirection : 'column'}}>
-                            <span>
+                            <span style={{display : 'flex',width: '100%',justifyContent : 'space-around'}}>
                             <button type="button" className="btn btn-default" onClick={() => props.closeTrigger(false)}>Cancel</button>
-                            <Field type="submit" className="btn btn-success" value="Edit"/>
+                            <Field type="submit" className="btn btn-primary" value="Edit"/>
                             </span>
                             {status ? (
                             <span style={{color : 'red',fontSize: '11px'}}>{status.message}</span>

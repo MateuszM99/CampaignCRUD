@@ -2,12 +2,12 @@ import React from 'react'
 
 function DeleteCampaign(props) {
     return (
-    <div style={{display : props.isShown ? 'block' : 'none'}}>
+    <div style={{display : props.isShown ? 'block' : 'none',visibility : props.isShown ? 'visible' : 'hidden'}} className="pop-up-container">
         <div className="modal-dialog">
             <div className="modal-content">               
                 <div className="modal-header">						
                     <h4 className="modal-title">Delete Campaign</h4>
-                    <button type="button" className="close" aria-hidden="true">&times;</button>
+                    <button type="button" className="close" aria-hidden="true" onClick={() => props.closeTrigger(false)}>&times;</button>
                 </div>
                 <div className="modal-body">					
                     <p>Are you sure you want to delete this record?</p>
