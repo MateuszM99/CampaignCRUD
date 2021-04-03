@@ -38,13 +38,16 @@ function CreateCampaign(props) {
                                 .trim()
                                 .required('Keyword cannot be empty')),
                     bidAmount : Yup.number()
+                                .positive('The amount must me positive')
                                 .required('Bid amount is mandatory'),
                     campaignFund : Yup.number()
+                                    .positive('The amount must me positive')
                                     .required('Campaign fund is mandatory'),
                     status : Yup.string()
                                 .required('Status is mandatory'),
                     town : Yup.string(),
                     radius : Yup.number()
+                                .positive('The amount must me positive')
                                 .required('Radius is mandatory')      
                 })}
 

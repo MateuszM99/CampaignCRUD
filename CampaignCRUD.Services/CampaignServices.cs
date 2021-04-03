@@ -25,6 +25,27 @@ namespace CampaignCRUD.Services
             _mapper = mapper;
         }
 
+        public async Task<ServiceResponse<CampaignDTO>> getCampaignAsync(int id)
+        {
+            try
+            {
+                var campaign = await _appDb.Campaigns.FindAsync(id);
+                var campaignDTO = _mapper.Map<CampaignDTO>(campaign);
+
+                ServiceResponse<CampaignDTO> serviceResponse = new ServiceResponse<CampaignDTO>();
+                serviceResponse.Data = campaignDTO;
+                serviceResponse.Message = "Successfully fetched Campaign";
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse<CampaignDTO> serviceResponse = new ServiceResponse<CampaignDTO>();
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+                return serviceResponse;
+            }
+        }
+
         public async Task<ServiceResponse<List<CampaignDTO>>> getCampaignsAsync()
         {
             try
@@ -107,7 +128,8 @@ namespace CampaignCRUD.Services
             try
             {
                 var campaign = await _appDb.Campaigns.FindAsync(updatedCampaignModel.Id);
-                campaign.Name = updatedCampaignModel.Name;
+               
+                campaign.Name = updatedCampaignModel.Name;              
                 campaign.Keywords = updatedCampaignModel.Keywords;
                 campaign.BidAmount = updatedCampaignModel.BidAmount;
                 campaign.CampaignFund = updatedCampaignModel.CampaignFund;
@@ -130,6 +152,6 @@ namespace CampaignCRUD.Services
                 serviceResponse.Message = ex.Message;
                 return serviceResponse;
             }
-        }
+        }    
     }
 }

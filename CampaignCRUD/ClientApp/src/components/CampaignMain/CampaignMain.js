@@ -50,12 +50,13 @@ function CampaignMain(props) {
         }
     }
 
-    const editCampaignCall = async (campaignModel) => {
+    const editCampaignCall = async (campaignModel,id) => {
         try {
-            let response = await editCampaign(campaignModel);
+            let response = await editCampaign(campaignModel,id);
             setCampaigns(response.data.data);
+            return true;
         } catch (err) {
-
+            return false;
         }
     }
 
@@ -89,7 +90,7 @@ function CampaignMain(props) {
                     <tbody>
                         {campaigns != null ?
                         campaigns.map(campaign =>
-                            <CampaignTR isUpdateDisplayedTrigger={setIsUpdateDisplayed} isDeleteDisplayedTrigger={setIsUpdateDisplayed} idSetter={setCurrentCampaignId} id={campaign.id} name={campaign.name} keywords={campaign.keywords} bidAmount={campaign.bidAmount} campaignFund={campaign.campaignFund} status={campaign.status} town={campaign.town} radius={campaign.radius}/>
+                            <CampaignTR key={campaign.id} isUpdateDisplayedTrigger={setIsUpdateDisplayed} isDeleteDisplayedTrigger={setIsDeleteDisplayed} idSetter={setCurrentCampaignId} id={campaign.id} name={campaign.name} keywords={campaign.keywords} bidAmount={campaign.bidAmount} campaignFund={campaign.campaignFund} status={campaign.status} town={campaign.town} radius={campaign.radius}/>
                             )
                             : null
                         }
@@ -98,7 +99,7 @@ function CampaignMain(props) {
             </div>
         </div>  
         <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed} createCampaign = {createCampaignCall} accountBalance={props.accountBalance} accountBalanceSet={props.accountBalanceSet}/>  
-        <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed} updateCampaign = {editCampaignCall} id={currentCampaignId}/>
+        <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed} updateCampaign = {editCampaignCall} id={currentCampaignId} accountBalance={props.accountBalance} accountBalanceSet={props.accountBalanceSet}/>
         <DeleteCampaign isShown={isDeleteDisplayed} closeTrigger={setIsDeleteDisplayed} deleteCampaign = {deleteCampaignCall} id={currentCampaignId}/>
     </div>
     )
