@@ -6,7 +6,7 @@ import UpdateCampaign from '../UpdateCampaign/UpdateCampaign';
 import './style.scss'
 import {getCampaigns,deleteCampaign,createCampaign,editCampaign} from '../../api/CampaignRequests'
 
-function CampaignMain() {
+function CampaignMain(props) {
 
     const [isCreateDisplayed, setIsCreateDisplayed] = useState(false);
     const [isUpdateDisplayed, setIsUpdateDisplayed] = useState(false);
@@ -23,7 +23,8 @@ function CampaignMain() {
     const getCampaignsCall = async () => {
         try {
             let response = await getCampaigns();
-            setCampaigns(response.data)
+            console.log(response);
+            setCampaigns(response.data.data);
         } catch (err) {
             // TODO if error
         }
@@ -32,7 +33,7 @@ function CampaignMain() {
     const deleteCampaignCall = async (campaignId) => {
         try {
             let response = await deleteCampaign(campaignId);
-            setCampaigns(response.data)
+            setCampaigns(response.data.data)
         } catch (err) {
             // TODO if error
         }
@@ -41,16 +42,18 @@ function CampaignMain() {
     const createCampaignCall = async (campaignModel) => {
         try{
             let response = await createCampaign(campaignModel);
-            setCampaigns(response.data);
-        } catch(err) {
-
+            setCampaigns(response.data.data);
+            return true;
+        } catch (err) {
+            console.log('Here')
+            return false;
         }
     }
 
     const editCampaignCall = async (campaignModel) => {
         try {
             let response = await editCampaign(campaignModel);
-            setCampaigns(response.data);
+            setCampaigns(response.data.data);
         } catch (err) {
 
         }
@@ -94,7 +97,7 @@ function CampaignMain() {
                 </table>
             </div>
         </div>  
-        <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed} createCampaign = {createCampaignCall}/>  
+        <CreateCampaign isShown={isCreateDisplayed} closeTrigger={setIsCreateDisplayed} createCampaign = {createCampaignCall} accountBalance={props.accountBalance} accountBalanceSet={props.accountBalanceSet}/>  
         <UpdateCampaign isShown={isUpdateDisplayed} closeTrigger={setIsUpdateDisplayed} updateCampaign = {editCampaignCall} id={currentCampaignId}/>
         <DeleteCampaign isShown={isDeleteDisplayed} closeTrigger={setIsDeleteDisplayed} deleteCampaign = {deleteCampaignCall} id={currentCampaignId}/>
     </div>

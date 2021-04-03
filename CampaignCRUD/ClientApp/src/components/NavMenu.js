@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import PersonIcon from '@material-ui/icons/Person';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -31,13 +33,11 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
+                  <div style={{display:'flex',alignItems : 'center',height : '100%'}}>
+                    <span>User</span>
+                    <PersonIcon fontSize="small" style={{margin : '0 10px 0 3px'}}/>
+                    <span><b>Balance:</b> {this.props.accountBalance} <b>$</b></span>                                   
+                  </div>
                 </NavItem>
               </ul>
             </Collapse>

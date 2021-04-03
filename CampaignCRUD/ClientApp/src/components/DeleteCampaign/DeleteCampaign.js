@@ -3,7 +3,7 @@ import React from 'react'
 function DeleteCampaign(props) {
     return (
     <div style={{display : props.isShown ? 'block' : 'none'}}>
-        <div class="modal-dialog">
+        <div className="modal-dialog">
             <div className="modal-content">               
                 <div className="modal-header">						
                     <h4 className="modal-title">Delete Campaign</h4>

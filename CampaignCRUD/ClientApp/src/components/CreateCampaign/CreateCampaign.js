@@ -6,22 +6,24 @@ import {createCampaign} from '../../api/CampaignRequests'
 
 function CreateCampaign(props) {
     const users = [
-        { id: 1, fullname: 'User #1' },
-        { id: 2, fullname: 'User #2' },
-        { id: 3, fullname: 'User #3' },
+        'User #1',
+        'User #2',
+        'User #3',
       ];
 
     return (
     <div style={{display : props.isShown ? 'block' : 'none'}}>
         <div className="modal-dialog">
             <div className="modal-content">
-                <Formik               
+                <Formik
+                validateOnChange={false}
+                validateOnBlur={false}               
                 initialValues = {{                   
                     name : '',
                     keywords : [],
                     bidAmount : '',
                     campaignFund : '',
-                    status : '',
+                    status : 'On',
                     town: '',
                     radius: '',
                 }}
@@ -30,7 +32,11 @@ function CreateCampaign(props) {
                             .required('Name is mandatory'),
                     keywords : Yup.array()
                             .min(1,'Keyword is mandatory')
-                            .required('Keyword is mandatory'),
+                            .required('Keyword is mandatory')
+                            .of(
+                                Yup.string()
+                                .trim()
+                                .required('Keyword cannot be empty')),
                     bidAmount : Yup.number()
                                 .required('Bid amount is mandatory'),
                     campaignFund : Yup.number()
@@ -42,12 +48,22 @@ function CreateCampaign(props) {
                                 .required('Radius is mandatory')      
                 })}
 
-                onSubmit={(values, { setSubmitting, setStatus, resetForm }) => {
-                    props.createCampaign(values)
-                    props.closeTrigger(false)
+                onSubmit={async (values, {setStatus, resetForm }) => {
+                    if(values.campaignFund < props.accountBalance){
+                        let response = await props.createCampaign(values)
+                        if(response){
+                            props.accountBalanceSet(props.accountBalance - values.campaignFund)
+                            resetForm(true);
+                            props.closeTrigger(false)
+                        } else {
+                            setStatus({message : "Something went wrong"})                           
+                        }
+                    } else {
+                    setStatus({message : "Not enough balance on the account"})
+                    }
                 }}
                 >
-                    {({ errors, touched,isSubmitting,status,setFieldValue,setFieldTouched}) => (
+                    {({ errors,status,setFieldValue,setFieldTouched}) => (
                     <Form>
                         <div className="modal-header">						
                             <h4 className="modal-title">Add Campaign</h4>
@@ -76,7 +92,7 @@ function CreateCampaign(props) {
                                                             onChange={(selected) => {                                                               
                                                                 setFieldValue(`keywords[${index}]`, selected);
                                                             }}
-                                                            onInputChange={(text) => setFieldValue(`keywords[${index}]`, text)}
+                                                            onInputChange={(text,event) => setFieldValue(`keywords[${index}]`, text)}
                                                             onBlur={(e) => setFieldTouched(`keywords[${index}]`, true)}
                                                             labelKey="fullname"
                                                             options={users}                                                       
@@ -98,20 +114,20 @@ function CreateCampaign(props) {
                                 <span style={{color : 'red',fontSize: '11px'}}>{errors.keywords}</span>
                             </div>
                             <div className="form-group">
-                                <label>Bid amount</label>
+                                <label>Bid amount ($)</label>
                                 <Field type="number" name="bidAmount" className="form-control" />
                                 <span style={{color : 'red',fontSize: '11px'}}>{errors.bidAmount}</span>
                             </div>
                             <div className="form-group">
-                                <label>Campaign fund</label>
-                                <Field type="number" name="campaignFund" className="form-control" />
+                                <label>Campaign fund ($)</label>
+                                <Field type="number" name="campaignFund" className="form-control" /><span></span> 
                                 <span style={{color : 'red',fontSize: '11px'}}>{errors.campaignFund}</span>
                             </div>	
                             <div className="form-group">
                                 <label>Status</label>
                                 <Field as="select" name="status" type="text" className="form-control">
-                                    <option>On</option>
-                                    <option>Off</option>
+                                    <option value="On">On</option>
+                                    <option value="Off">Off</option>
                                 </Field>
                                 <span style={{color : 'red',fontSize: '11px'}}>{errors.status}</span>
                             </div>
@@ -132,14 +148,19 @@ function CreateCampaign(props) {
                                 </Field>
                             </div>	
                             <div className="form-group">
-                                <label>Radius</label>
+                                <label>Radius (km)</label>
                                 <Field type="number" name="radius" className="form-control" />
                                 <span style={{color : 'red',fontSize: '11px'}}>{errors.radius}</span>
                             </div>			
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer" style={{display : 'flex',flexDirection : 'column'}}>
+                            <span>
                             <button type="button" className="btn btn-default" onClick={() => props.closeTrigger(false)}>Cancel</button>
                             <Field type="submit" className="btn btn-success" value="Add"/>
+                            </span>
+                            {status ? (
+                            <span style={{color : 'red',fontSize: '11px'}}>{status.message}</span>
+                            ) : null}
                         </div>
                     </Form>
                     )}
